@@ -64,7 +64,7 @@ from generate_add_parameters_template import write_a_empty_new_item_py
 new_item_file = '../Input/add/parameters.py'  
 wip_image_dir = '../Input/add/Pictures'  # Only jpg images
 product_database_file = '../Data/item_DB.csv'
-image_dir = '../Data/Profiles'
+profile_dir = '../Data/Profiles'
 
 # +
 image_names = os.listdir(wip_image_dir)
@@ -160,13 +160,28 @@ db = db.append(pd.Series(new_product, name=new_index))
 image_names = os.listdir(wip_image_dir)
 image_names.sort()
 
-os.mkdir(os.path.join(image_dir, str(new_product['Item ID'])))
+os.mkdir(os.path.join(profile_dir, str(new_product['Item ID'])))
+os.mkdir(os.path.join(profile_dir, str(new_product['Item ID']), 'Pictures'))
+
 for i, image_name in enumerate(image_names):
     os.rename(
         os.path.join(wip_image_dir, image_name),
-        os.path.join(image_dir, str(new_product['Item ID']), new_product['Item ID']+f'_{i}.jpg')
+        os.path.join(profile_dir, str(new_product['Item ID']), 'Pictures', new_product['Item ID']+f'_{i}.jpg')
     )
+
 # -
 
+item_profile_txt_file = os.path.join(
+    profile_dir,
+    str(new_product['Item ID']),
+    'item_profile.txt'
+)
+with open(item_profile_txt_file, 'w') as file:
+    for key, value in db.iloc[-1].to_dict().items():
+        if value == None:
+            value = ''
+        file.write(f"{key}='{value}'\n")
 write_a_empty_new_item_py(new_item_file)
 db.to_csv(product_database_file)
+
+

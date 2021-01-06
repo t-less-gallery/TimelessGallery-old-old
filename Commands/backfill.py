@@ -16,53 +16,11 @@ import os
 import pandas as pd
 import random
 import datetime
-from generate_add_parameters_template import write_a_empty_new_item_py
+import item_profile_order
+from generate_backfill_parameters_template import write_a_empty_new_item_py
 
-# +
-# product_database_file = '../data/item_DB.csv'  #
-
-# db = pd.DataFrame(
-#         columns=[
-#             'Table Index',
-#             'Item ID',
-#             'Catalogue Number',
-#             'Item Name',
-#             'Total Cost',
-#             'Status',
-#             'Pricing',
-#             'Sold Price',
-            
-#             'Artist',
-#             'Manufacturer',
-#             'Series',
-#             'Model Start Year',
-#             'Model End Year',
-#             'Period',
-#             'Age Class',
-#             'Height',
-#             'Length',
-#             'Width',
-    
-#             'Market Average',
-#             'Rareness',
-#             'Condition',
-#             'Short Highlight',
-#             'Collection Class',
-
-#             'Item Cost',
-#             'Additional Cost',
-
-#             'Status Date',
-#             'Creation Date',
-#         ]
-#     ).set_index('Table Index')
-
-# db.to_csv(product_database_file)
-
-# -
-
-new_item_file = '../Input/add/parameters.py'  
-wip_image_dir = '../Input/add/Pictures'  # Only jpg images
+new_item_file = '../Input/backfill/parameters.py'  
+wip_image_dir = '../Input/backfill/Pictures'  # Only jpg images
 product_database_file = '../Data/item_DB.csv'
 profile_dir = '../Data/Profiles'
 
@@ -80,6 +38,7 @@ with open(new_item_file) as file:
     
 # Check if there is empty string in the non-null columns
 for column in [
+    'item_id',
     'catalogue_number',
     'item_name',
     'period',
@@ -99,20 +58,13 @@ Note: It doesn't check duplicates
 # Read existing DB
 db = pd.read_csv(product_database_file, index_col='Table Index')
 
-# Create unique ID
-if db.shape[0] != 0:
-    existing_ids = db['Item ID'].str.split('-', expand=True)[1].values
-else:
-    existing_ids = []
-item_id = 'F-' + str(random.choice([x for x in range(1,10_000) if x not in existing_ids]))
-
 #
 if additional_cost == '':
     additional_cost = 0
 
 
 new_product = {
-    'Item ID':item_id,
+    'Item ID':item_id,  # not-null
     
     'Catalogue Number':catalogue_number,  # non-null
     'Item Name':item_name,  # non-null
@@ -160,6 +112,9 @@ os.mkdir(os.path.join(profile_dir, str(new_product['Item ID'])))
 os.mkdir(os.path.join(profile_dir, str(new_product['Item ID']), 'Pictures'))
 
 for i, image_name in enumerate(image_names):
+    i += 1
+    if i < 10:
+        i = f'0{i}'
     os.rename(
         os.path.join(wip_image_dir, image_name),
         os.path.join(profile_dir, str(new_product['Item ID']), 'Pictures', new_product['Item ID']+f'_{i}.jpg')
@@ -187,7 +142,7 @@ with open(item_profile_txt_file, 'w') as file:
             file.write(line)
             file.write('-'*35+'\n')
 
-        
+            
 os.mkdir(os.path.join(profile_dir, str(new_product['Item ID']), 'Misc'))
 os.rename(
     os.path.join(new_item_file),

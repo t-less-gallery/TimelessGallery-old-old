@@ -16,6 +16,8 @@ import os
 import pandas as pd
 import random
 import datetime
+import item_profile_order
+import shopify_upload
 from generate_add_parameters_template import write_a_empty_new_item_py
 
 # +
@@ -195,3 +197,22 @@ os.rename(
 )
 write_a_empty_new_item_py(new_item_file)
 db.to_csv(product_database_file)
+# -
+
+#
+tags="Emotive, Flash Memory, MP3, Music"
+product_type = 'Figurine'
+manufacturer = 'Doll'
+shopify_upload.shopify_list_new_item(
+    item_name,
+    catalogue_number,
+    age_class,
+    manufacturer,
+    period,
+    item_id,
+    product_type,
+    tags,
+    profile_dir,
+    product_database_file
+)
+

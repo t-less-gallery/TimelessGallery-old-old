@@ -1,8 +1,8 @@
 shared_settings_file = "./shared_settings.py"
 with open(shared_settings_file) as file:
     exec(file.read())
-
 operation_name = "view"
+
 empty_line = "\n"
 line_separator = "-"*35
 max_padding = 19
@@ -44,7 +44,7 @@ profile_content = [
 
 
 def execute_operation():
-    assert len(sys.argv) == 2, f"incorrect number of arguments: need 2, actual {len(sys.argv)}"
+    assert len(sys.argv) == 2, f"incorrect number of arguments: need 1, actual {len(sys.argv) - 1}"
     access_key = sys.argv[1]
     access_column = literal_db_item_id
     db = pandas.read_csv(database_file, index_col=literal_db_index, keep_default_na=False)

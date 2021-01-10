@@ -2,9 +2,22 @@ import os
 import pandas
 import sys
 import math
+import shutil
 
 path_to_home = ".."
+imagebase_dir = os.path.join(path_to_home, "Data", "Images")
+backup_dir = os.path.join(path_to_home, "Data", "Backup")
 database_file = os.path.join(path_to_home, "Data", "database.csv")
+
+literal_input_item_id = "item_id"
+literal_input_catalogue_number = "catalogue_number"
+literal_input_item_name = "item_name"
+literal_input_period = "period"
+literal_input_age_class = "age_class"
+literal_input_condition = "condition"
+literal_input_collection_class = "collection_class"
+literal_input_item_cost = "item_cost"
+literal_input_pricing = "pricing"
 
 literal_db_index = "Table Index"
 literal_db_item_id = "Item ID"

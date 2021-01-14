@@ -1,30 +1,29 @@
 import random
 import datetime
 
-shared_settings_file = "./shared_settings.py"
-with open(shared_settings_file) as file:
+shared_code_file = "./shared_code.py"
+with open(shared_code_file) as file:
     exec(file.read())
 operation_name = "add_to_db"
 
 input_parameters_file = os.path.join(path_to_home, "Input", operation_name, "parameters.py")
 input_images_dir = os.path.join(path_to_home, "Input", operation_name, "Pictures")
-template_dir = os.path.join(path_to_home, "Template")
 template_input_parameters_file = os.path.join(template_dir, f"{operation_name}_parameters.py")
 
 new_id_prefix = "F"
 manufacturer_brand = "Royal Doulton"
-required_db_columns = [
-    literal_input_catalogue_number,
-    literal_input_item_name,
-    literal_input_period,
-    literal_input_age_class,
-    literal_input_condition,
-    literal_input_collection_class,
-    literal_input_item_cost,
-    literal_input_pricing
-]
-valid_image_extensions = (".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG")
+valid_image_extensions = (".jpg", ".JPG", ".jpeg", ".JPEG")
 date_today = datetime.datetime.now().strftime("%Y-%m-%d")
+required_input = [
+    literal_catalogue_number,
+    literal_item_name,
+    literal_period,
+    literal_age_class,
+    literal_condition,
+    literal_collection_class,
+    literal_item_cost,
+    literal_pricing
+]
 
 
 def execute_operation():
@@ -39,14 +38,14 @@ def input_validation():
     image_names = os.listdir(input_images_dir)
     for name in image_names:
         assert name.endswith(valid_image_extensions), f'invalid image extension: {name}'
-    for column in required_db_columns:
-        assert globals()[column] != '', f'column should not be empty: {column}'
+    for input in required_input:
+        assert globals()[input] != '', f'column should not be empty: {input}'
 
 
 def add_db_record():
     db = pandas.read_csv(database_file, index_col=literal_db_index)
-    if literal_input_item_id in globals():
-        item_id = globals()[literal_input_item_id]
+    if literal_item_id in globals():
+        item_id = globals()[literal_item_id]
     else:
         existing_ids = [] if (db.shape[0] == 0) else (db[literal_db_item_id].str.split('-', expand=True)[1].values)
         item_id = new_id_prefix + '-' + str(random.choice([x for x in range(1,10_000) if x not in existing_ids]))

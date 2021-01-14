@@ -1,5 +1,5 @@
-shared_settings_file = "./shared_settings.py"
-with open(shared_settings_file) as file:
+shared_code_file = "./shared_code.py"
+with open(shared_code_file) as file:
     exec(file.read())
 operation_name = "view"
 
@@ -44,12 +44,8 @@ profile_content = [
 
 
 def execute_operation():
-    assert len(sys.argv) == 2, f"incorrect number of arguments: need 1, actual {len(sys.argv) - 1}"
-    access_key = sys.argv[1]
-    access_column = literal_db_item_id
-    db = pandas.read_csv(database_file, index_col=literal_db_index, keep_default_na=False)
-    assert db[access_column].str.contains(access_key).any(), f"entry doesn't exist: {access_column} -> {access_key}"
-    db_entry = db.loc[db[access_column] == access_key].to_dict()
+    item_id = sys.argv[1]
+    db_entry = read_db_entry_by_item_id(item_id)
     print_profile(db_entry)
 
 
@@ -66,4 +62,5 @@ def print_profile(db_entry):
 
 
 if __name__ == "__main__":
+    assert len(sys.argv) == 2, f"incorrect number of arguments: need 1, actual {len(sys.argv) - 1}"
     execute_operation()

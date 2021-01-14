@@ -26,6 +26,9 @@ def execute_operation():
 
     load_db_entry_to_global(item_id)
 
+    global age_class
+    age_class = "" if age_class == "contemporary" else age_class
+
     shopify_images = []
     for image_name in os.listdir(item_image_dir):
         with open(os.path.join(item_image_dir, image_name), "rb") as file:

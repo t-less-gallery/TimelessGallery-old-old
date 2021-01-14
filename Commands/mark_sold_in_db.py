@@ -4,42 +4,18 @@ import datetime
 shared_code_file = "./shared_code.py"
 with open(shared_code_file) as file:
     exec(file.read())
-operation_name = "add_to_db"
+operation_name = "mark_sold_in_db"
 
 input_parameters_file = os.path.join(path_to_home, "Input", operation_name, "parameters.py")
-input_images_dir = os.path.join(path_to_home, "Input", operation_name, "Pictures")
 template_input_parameters_file = os.path.join(template_dir, f"{operation_name}_parameters.py")
 
-new_id_prefix = "F"
-manufacturer_brand = "Royal Doulton"
-valid_image_extensions = (".jpg", ".JPG", ".jpeg", ".JPEG")
-date_today = datetime.datetime.now().strftime("%Y-%m-%d")
-required_input = [
-    literal_catalogue_number,
-    literal_item_name,
-    literal_period,
-    literal_age_class,
-    literal_condition,
-    literal_collection_class,
-    literal_item_cost,
-    literal_pricing
-]
 
 
 def execute_operation():
-    input_validation()
-    add_db_record()
-    add_imagebase_record()
-    backup_input_parameters()
-    reset_input_parameters()
+    load_db_entry_to_global(item_id)
 
 
-def input_validation():
-    image_names = os.listdir(input_images_dir)
-    for name in image_names:
-        assert name.endswith(valid_image_extensions), f'invalid image extension: {name}'
-    for input in required_input:
-        assert globals()[input] != '', f'column should not be empty: {input}'
+
 
 
 def add_db_record():
@@ -110,11 +86,5 @@ def reset_input_parameters():
 if __name__ == "__main__":
     with open(input_parameters_file) as file:
         exec(file.read())
-
-    additional_cost = 0.0 if (additional_cost == '') else float(additional_cost)
-    acquisition_date = acquisition_date.strftime("%Y-%m")
-    length = None if (length == '') else float(length)
-    width = None if (width == '') else float(width)
-    market_average = None if (market_average == '') else float(market_average)
 
     execute_operation()

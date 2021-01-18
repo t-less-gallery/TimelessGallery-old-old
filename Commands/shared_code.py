@@ -8,6 +8,7 @@ path_to_home = ".."
 imagebase_dir = os.path.join(path_to_home, "Data", "Images")
 backup_dir = os.path.join(path_to_home, "Data", "Backup")
 database_file = os.path.join(path_to_home, "Data", "database.csv")
+shopify_mapping_db_file = os.path.join(path_to_home, "Data", "shopify_mapping_db.csv")
 template_dir = os.path.join(path_to_home, "Template")
 
 literal_item_id = "item_id"
@@ -70,6 +71,13 @@ literal_db_item_cost = "Item Cost"
 literal_db_additional_cost = "Additional Cost"
 literal_db_total_cost = "Total Cost"
 literal_db_finalization = "Finalization"
+
+literal_shopify_id_mapping_db_index = "Table Index"
+literal_shopify_id_mapping_db_item_id = "Item ID"
+literal_shopify_id_mapping_db_product_id = "Product ID"
+literal_shopify_id_mapping_db_creation_date = "Creation Date"
+literal_shopify_id_mapping_db_status_date = "Status Date"
+
 
 def read_db_entry_by_item_id(item_id):
     access_column = literal_db_item_id

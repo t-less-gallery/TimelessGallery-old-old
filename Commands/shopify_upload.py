@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 import base64
+import datetime
 import requests
 import json
 
@@ -44,8 +46,7 @@ def execute_operation():
     shopify_title = f"{catalogue_number} {item_name} - {age_class} Porcelain Figurine by {manufacturer}, {period} (Item# {item_id})"
     seo_title = f"{catalogue_number} - {item_name} - {age_class} Royal Doulton Figurine"
     seo_description = f"A {age_class} Royal Doulton HN Series porcelain figurine, {period}. The figurine is numbered {catalogue_number} with the name “{item_name}”, in the “{series}” Series. The figurine is hand made and hand decorated. This is a {collection_class} Royal Doulton collectable piece."
-
-# ref: https://shopify.dev/docs/admin-api/rest/reference/products/product
+    # ref: https://shopify.dev/docs/admin-api/rest/reference/products/product
     shopify_item_json = {
         "product": {
             "title": shopify_title,
@@ -71,7 +72,7 @@ def execute_operation():
         data=json.dumps(shopify_item_json)
     )
     print(response)
-
+    save_product_id(item_id, response)
 
 def generate_html():
     with open(html_template_file, 'r') as file:
@@ -102,6 +103,24 @@ def generate_condition_verbiage():
         return "overall in good vintage condition, but has some minor imperfection"
     else:
         return condition
+
+
+def save_product_id(item_id, response):
+    shopify_mapping_db = pd.read_csv(shopify_mapping_db_file,
+                                     index_col=literal_db_index,
+                                     keep_default_na=False)
+    date_today = datetime.datetime.now().strftime("%Y-%m-%d")
+    product_id = response['product']['id']
+    new_db_index = 0 if (shopify_mapping_db.shape[0] == 0) else (int(shopify_mapping_db.index.max()) + 1)
+    new_item = {
+            literal_shopify_id_mapping_db_item_id:item_id,
+            literal_shopify_id_mapping_db_product_id:product_id,
+            literal_shopify_id_mapping_db_creation_date:date_today,
+            literal_shopify_id_mapping_db_status_date:date_today
+        }
+    shopify_mapping_db = shopify_mapping_db.append(pandas.Series(new_item, name=new_db_index))
+    shopify_mapping_db.to_csv(shopify_mapping_db_file)
+    
 
 
 if __name__ == "__main__":

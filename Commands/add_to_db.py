@@ -44,7 +44,7 @@ def input_validation():
 
 def add_db_record():
     db = pandas.read_csv(database_file, index_col=literal_db_index)
-    if literal_item_id in globals():
+    if globals()[literal_item_id] != '':
         item_id = globals()[literal_item_id]
     else:
         existing_ids = [] if (db.shape[0] == 0) else (db[literal_db_item_id].str.split('-', expand=True)[1].values)

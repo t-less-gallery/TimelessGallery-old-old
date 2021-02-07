@@ -48,6 +48,7 @@ def add_db_record():
         item_id = globals()[literal_item_id]
     else:
         existing_ids = [] if (db.shape[0] == 0) else (db[literal_db_item_id].str.split('-', expand=True)[1].values)
+        existing_ids = list(map(int,existing_ids))
         item_id = new_id_prefix + '-' + str(random.choice([x for x in range(1,10_000) if x not in existing_ids]))
 
     new_item = {

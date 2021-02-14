@@ -10,7 +10,7 @@ input_parameters_file = os.path.join(path_to_home, "Input", operation_name, "par
 input_images_dir = os.path.join(path_to_home, "Input", operation_name, "Pictures")
 template_input_parameters_file = os.path.join(template_dir, f"{operation_name}_parameters.py")
 
-new_id_prefix = "F"
+new_id_prefix = "P"
 manufacturer_brand = "Royal Doulton"
 valid_image_extensions = (".jpg", ".JPG", ".jpeg", ".JPEG")
 date_today = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -35,7 +35,9 @@ def execute_operation():
 
 
 def input_validation():
+    os.system(f"rm -f {input_images_dir}/.DS_Store")
     image_names = os.listdir(input_images_dir)
+    
     for name in image_names:
         assert name.endswith(valid_image_extensions), f'invalid image extension: {name}'
     for input in required_input:
@@ -44,12 +46,15 @@ def input_validation():
 
 def add_db_record():
     db = pandas.read_csv(database_file, index_col=literal_db_index)
+
     if globals()[literal_item_id] != '':
         item_id = globals()[literal_item_id]
     else:
         existing_ids = [] if (db.shape[0] == 0) else (db[literal_db_item_id].str.split('-', expand=True)[1].values)
         existing_ids = list(map(int,existing_ids))
-        item_id = new_id_prefix + '-' + str(random.choice([x for x in range(1,10_000) if x not in existing_ids]))
+        local_item_id = new_id_prefix + '-' + str(random.choice([x for x in range(1001,10_000) if x not in existing_ids]))
+    global item_id
+    item_id = local_item_id
 
     new_item = {
         literal_db_item_id:item_id,
@@ -94,7 +99,8 @@ def add_imagebase_record():
         new_name = item_id + '_' + str(i + 1).zfill(2) + '.jpg'
         os.rename(os.path.join(input_images_dir, name), os.path.join(input_images_dir, new_name))
     item_image_dir = os.path.join(imagebase_dir, item_id)
-    shutil.move(input_images_dir, item_image_dir)
+    #shutil.move(input_images_dir, item_image_dir)
+    shutil.copytree(input_images_dir, item_image_dir)
 
 
 def backup_input_parameters():
@@ -106,6 +112,7 @@ def backup_input_parameters():
 
 def reset_input_parameters():
     shutil.copy(template_input_parameters_file, input_parameters_file)
+    #os.mkdir(input_images_dir)
 
 
 if __name__ == "__main__":
@@ -119,3 +126,6 @@ if __name__ == "__main__":
     market_average = None if (market_average == '') else float(market_average)
 
     execute_operation()
+    print(item_id)
+    print(f"{catalogue_number} {item_name} - {age_class} Porcelain Figurine by Royal Doulton, {period}")
+    print(pricing)

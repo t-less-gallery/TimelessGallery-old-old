@@ -1,0 +1,24 @@
+postAdForm.attributeMap[moreinfo_s]: vintage-antiques
+postAdForm.title:
+postAdForm.priceAmount:
+postAdForm.phoneNumber:
+postAdForm.adType: OFFER
+postAdForm.attributeMap[forsaleby_s]: ownr
+postAdForm.priceType: FIXED
+postAdForm.city: Toronto
+postAdForm.province: Ontario
+postAdForm.postalCode: M2L 1A9
+postAdForm.addressCity: Toronto
+postAdForm.addressProvince: Ontario
+postAdForm.addressPostalCode: M2L 1A9
+postAdForm.geocodeLat: '43.7468827'
+postAdForm.geocodeLng: '-79.3846841'
+postAdForm.locationId: 1700273
+PostalLat: '43.7468827'
+PostalLng: '-79.3846841'
+locationLevel0: 1700272
+topAdDuration: '7'
+submitType: saveAndCheckout
+postAdForm.description:
+categoryId: 12
+image_paths:
